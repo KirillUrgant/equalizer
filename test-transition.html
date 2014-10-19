@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Equalizr</title>
+	<script src="jquery-1.11.1.min.js"></script>
+	<style>
+	.equalizer-wrapper {
+		float:left; margin: 0 20px 20px 0;
+	}
+	.equalizer {
+		overflow: hidden;
+		border:1px solid #ddd;
+	}
+	.equalizer.small {
+		width: 100px;
+		height: 100px;
+	}
+	.equalizer.normal {
+		width: 200px;
+		height: 200px;
+	}
+	.equalizer.big {
+		width: 300px;
+		height: 300px;
+	}
+	</style>
+	<script>
+		function setEqualizer(selector, timeout, colWidth) {
+			if (!colWidth) {
+				colWidth = 1;
+			}
+			$(selector).css({
+				verticalAlign: 'bottom',
+				lineHeight: $(selector).height() + 'px'
+			});
+
+			// Кол-во столбиков
+			var colQuantity = Math.ceil($(selector).width()/colWidth);
+			var cols = new Array(colQuantity);
+			for (var i = 0; i < cols.length; i++) {
+				var span = $('<span><span/>').appendTo(selector);
+				span.css({
+					verticalAlign: 'bottom',
+					display: 'inline-block',
+
+					fontSize: 0,
+					lineHeight: 0,
+					height: Math.round($(selector).height()/2),
+
+					width: colWidth,
+					background: 'pink',
+					borderTop: '2px solid red',
+					"-webkit-transition-property": "height",
+					"-moz-transition-property": "height",
+					"-o-transition-property": "height",
+					"transition-property": "height",
+					"-webkit-transition-duration": timeout+"ms",
+					"-moz-transition-duration": timeout+"ms",
+					"-o-transition-duration": timeout+"ms",
+					"transition-duration": timeout+"ms",
+					"-webkit-transition-timing-function": "linear",
+					"-moz-transition-timing-function": "linear",
+					"-o-transition-timing-function": "linear",
+					"transition-timing-function": "linear"
+				});
+			};
+
+			//Для каждого элемента выборки задаем случайную высоту
+			$(selector+' span').each(function(){
+				$(this).css('height', Math.round($(selector).height()*Math.random()));
+			});
+
+			//Устанавливаем управляющую переменную
+			var temp=false;
+
+			//Меняем высоту каждого столбика через заданный промежуток времени
+			//анимируется за счет css transition
+			setInterval(function(){
+				$(selector+' span').each(function(){
+					if (temp) {
+						$(this).css('height', Math.round($(selector).height()*Math.random()))
+					} else {
+						$(this).css('height', Math.round($(selector).height()/2))
+					};
+				});
+				if (temp) {
+					temp=false;
+				} else {
+					temp=true;
+				}
+			}, timeout);
+		}
+
+		window.onload = function () {
+			setEqualizer('#eq_1 .equalizer', 1000, 5);
+			setEqualizer('#eq_2 .equalizer', 1000, 5);
+			setEqualizer('#eq_3 .equalizer', 1000, 5);
+		}
+	</script>
+  </head>
+  <body>
+	<h1>Equalizers (with using css3 transition)</h1>
+	<div id="eq_1" class="equalizer-wrapper">
+	  <h2>First</h2>
+	  <div class="equalizer small"></div>
+	</div>
+	<div id="eq_2" class="equalizer-wrapper">
+	  <h2>Second</h2>
+	  <div class="equalizer normal"></div>
+	</div>
+	<div id="eq_3" class="equalizer-wrapper">
+	  <h2>Third</h2>
+	  <div class="equalizer big"></div>
+	</div>
+  </body>
+</html>
